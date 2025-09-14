@@ -35,6 +35,19 @@ const ProjectCard = ({
         live: "https://jhotapoof40.netlify.app/"
       }
     }
+    if (title === "FRAS: Face Recognition Attendance System") {
+      return {
+        github: "https://github.com/yashjhota/Facial_Attendance_System",
+        live: liveLink || demoLink
+      }
+    }
+    if (title === "BrainScanNet: Brain Tumor Classification" || 
+        title === "BrainScanNet: Enhanced Brain Tumor Classification") {
+      return {
+        github: "https://github.com/yashjjota/brainscannet",
+        live: liveLink || demoLink
+      }
+    }
     return {
       github: githubLink,
       live: liveLink || demoLink

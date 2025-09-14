@@ -32,6 +32,7 @@ const HeroSection = () => {
 
   return (
     <section className="hero-section min-h-screen flex items-center relative overflow-hidden pt-16">
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90"></div>
       <div className="container mx-auto z-10 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -53,7 +54,7 @@ const HeroSection = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading bg-gradient-to-r from-secondary via-accent to-secondary bg-clip-text text-transparent"
               >
                 Yash Jain
               </motion.h1>
@@ -71,7 +72,7 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-lg max-w-lg"
+              className="text-lg max-w-lg text-muted-foreground"
             >
               Building the Future with AI and Code
             </motion.p>
@@ -83,16 +84,26 @@ const HeroSection = () => {
               className="flex flex-wrap gap-4"
             >
               <Link to="/contact">
-                <Button size="lg" className="gap-2">
-                  Get in Touch <ArrowRight className="h-4 w-4" />
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button size="lg" className="gap-2 bg-secondary/90 hover:bg-secondary backdrop-blur-sm">
+                    Get in Touch <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </motion.div>
               </Link>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/projects">
-                  View Projects
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button variant="outline" size="lg" asChild className="border-secondary/50 hover:border-secondary backdrop-blur-sm">
+                  <Link to="/projects">
+                    View Projects
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </motion.div>
             </motion.div>
             
             <motion.div 
@@ -101,31 +112,37 @@ const HeroSection = () => {
               transition={{ delay: 0.7 }}
               className="flex items-center gap-4 pt-4"
             >
-              <a 
+              <motion.a 
                 href="https://github.com/yashjhota" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-secondary transition-colors"
                 aria-label="GitHub"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Github className="h-6 w-6" />
-              </a>
-              <a 
+              </motion.a>
+              <motion.a 
                 href="https://linkedin.com/in/yashjjota" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-secondary transition-colors"
                 aria-label="LinkedIn"
+                whileHover={{ scale: 1.2, rotate: -5 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Linkedin className="h-6 w-6" />
-              </a>
-              <a 
+              </motion.a>
+              <motion.a 
                 href="mailto:jhotayash@gmail.com"
                 className="text-muted-foreground hover:text-secondary transition-colors"
                 aria-label="Email"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <Mail className="h-6 w-6" />
-              </a>
+              </motion.a>
             </motion.div>
           </motion.div>
           
@@ -136,32 +153,100 @@ const HeroSection = () => {
             className="relative"
           >
             <div className="relative w-full aspect-square max-w-md mx-auto">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-secondary to-accent opacity-20 blur-2xl"></div>
-              <div className="absolute inset-0 rounded-full border-2 border-secondary/30 animate-pulse"></div>
-              <div className="absolute inset-4 rounded-full border border-accent/30"></div>
-              <div className="absolute inset-8 rounded-full bg-card flex items-center justify-center">
+              <motion.div 
+                className="absolute inset-0 rounded-full bg-gradient-to-br from-secondary/30 to-accent/30 blur-2xl"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ 
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              ></motion.div>
+              <motion.div 
+                className="absolute inset-0 rounded-full border-2 border-secondary/30"
+                animate={{ rotate: 360 }}
+                transition={{ 
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              ></motion.div>
+              <motion.div 
+                className="absolute inset-4 rounded-full border border-accent/30"
+                animate={{ rotate: -360 }}
+                transition={{ 
+                  duration: 15,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              ></motion.div>
+              <div className="absolute inset-8 rounded-full bg-card/50 backdrop-blur-sm border border-border flex items-center justify-center">
                 <div className="text-center p-8">
-                  <div className="font-mono text-sm mb-2 text-muted-foreground">{'<code>'}</div>
-                  <div className="font-heading text-xl font-bold mb-4">AI/ML Engineer</div>
+                  <motion.div 
+                    className="font-mono text-sm mb-2 text-muted-foreground"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                  >
+                    {'<code>'}
+                  </motion.div>
+                  <motion.div 
+                    className="font-heading text-xl font-bold mb-4 bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.2 }}
+                  >
+                    AI/ML Engineer
+                  </motion.div>
                   <div className="space-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-secondary"></span>
+                    <motion.div 
+                      className="flex items-center justify-center gap-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.4 }}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-secondary animate-pulse"></span>
                       <span>Machine Learning</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-accent"></span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center justify-center gap-2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.6 }}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
                       <span>Deep Learning</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-secondary"></span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center justify-center gap-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.8 }}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-secondary animate-pulse"></span>
                       <span>GenAI</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-accent"></span>
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center justify-center gap-2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 2 }}
+                    >
+                      <span className="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
                       <span>Data Engineering</span>
-                    </div>
+                    </motion.div>
                   </div>
-                  <div className="font-mono text-sm mt-2 text-muted-foreground">{'</code>'}</div>
+                  <motion.div 
+                    className="font-mono text-sm mt-2 text-muted-foreground"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2.2 }}
+                  >
+                    {'</code>'}
+                  </motion.div>
                 </div>
               </div>
             </div>

@@ -54,7 +54,7 @@ const Projects = () => {
             date: "Aug 2024",
             tags: ["Face Recognition", "LBP", "PCA", "Excel Integration", "Python", "OpenCV"],
             icon: <Scan className="h-10 w-10 text-accent" />,
-            githubLink: "https://github.com/yashjjota/fras"
+            githubLink: "https://github.com/yashjhota/Facial_Attendance_System"
           },
           {
             id: "brainscannet",
@@ -150,31 +150,24 @@ const Projects = () => {
                 transition={{ duration: 0.6 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
-                {projects.map((project, index) => {
-                  // Update GitHub link for FRAS project
-                  const updatedProject = project.title === "FRAS: Face Recognition Attendance System" 
-                    ? { ...project, githubLink: "https://github.com/yashjhota/Facial_Attendance_System" }
-                    : project;
-                  
-                  return (
-                    <motion.div
-                      key={project.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <ProjectCard
-                        title={updatedProject.title}
-                        description={updatedProject.description}
-                        date={updatedProject.date}
-                        tags={updatedProject.tags}
-                        icon={updatedProject.icon}
-                        githubLink={updatedProject.githubLink}
-                        liveLink={updatedProject.liveLink}
-                      />
-                    </motion.div>
-                  );
-                })}
+                {projects.map((project, index) => (
+                  <motion.div
+                    key={project.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <ProjectCard
+                      title={project.title}
+                      description={project.description}
+                      date={project.date}
+                      tags={project.tags}
+                      icon={project.icon}
+                      githubLink={project.githubLink}
+                      liveLink={project.liveLink}
+                    />
+                  </motion.div>
+                ))}
               </motion.div>
             ) : (
               <motion.div

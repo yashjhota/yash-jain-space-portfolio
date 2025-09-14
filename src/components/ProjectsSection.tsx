@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight, Brain, ExternalLink, Github, Kaggle, MessageSquare, Scan } from 'lucide-react';
+import { ArrowRight, Brain, ExternalLink, Github, MessageSquare, Scan } from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
@@ -54,7 +54,7 @@ const ProjectsSection = () => {
             date: "Aug 2024",
             tags: ["Face Recognition", "LBP", "PCA", "Excel Integration"],
             link: "/projects",
-            githubLink: "https://github.com/yashjjota/fras"
+            githubLink: "https://github.com/yashjhota/Facial_Attendance_System"
           },
           {
             id: "brainscannet",
@@ -89,17 +89,18 @@ const ProjectsSection = () => {
 
   if (error) {
     return (
-      <section className="py-20">
-        <div className="container mx-auto">
+      <section className="py-20 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-card/5 to-transparent"></div>
+        <div className="container mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h2 className="text-3xl font-bold font-heading mb-4">Featured Projects</h2>
+            <h2 className="text-3xl font-bold font-heading mb-4 bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">Featured Projects</h2>
             <div className="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mb-6"></div>
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-md mx-auto">
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-md mx-auto backdrop-blur-sm">
               <p className="text-destructive mb-4">{error}</p>
               <Button onClick={handleRetry} variant="outline">
                 Try Again
@@ -112,8 +113,9 @@ const ProjectsSection = () => {
   }
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto">
+    <section className="py-20 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-card/5 to-transparent"></div>
+      <div className="container mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -121,8 +123,14 @@ const ProjectsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold font-heading mb-4">Featured Projects</h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mb-6"></div>
+          <h2 className="text-3xl font-bold font-heading mb-4 bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent">Featured Projects</h2>
+          <motion.div 
+            className="w-20 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mb-6"
+            initial={{ width: 0 }}
+            whileInView={{ width: 80 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          ></motion.div>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Explore some of my recent projects showcasing my skills in AI, Machine Learning, and Software Development.
           </p>
@@ -137,26 +145,26 @@ const ProjectsSection = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="h-full border-border bg-card animate-pulse">
+                <Card className="h-full border-border/50 bg-card/20 backdrop-blur-sm animate-pulse">
                   <CardHeader className="pb-4">
-                    <div className="w-10 h-10 bg-muted rounded mb-2"></div>
-                    <div className="h-6 bg-muted rounded mb-2"></div>
-                    <div className="h-4 bg-muted rounded w-20"></div>
+                    <div className="w-10 h-10 bg-muted/30 rounded mb-2"></div>
+                    <div className="h-6 bg-muted/30 rounded mb-2"></div>
+                    <div className="h-4 bg-muted/30 rounded w-20"></div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 mb-4">
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded w-3/4"></div>
+                      <div className="h-4 bg-muted/30 rounded"></div>
+                      <div className="h-4 bg-muted/30 rounded"></div>
+                      <div className="h-4 bg-muted/30 rounded w-3/4"></div>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {[1, 2, 3].map((tagIndex) => (
-                        <div key={tagIndex} className="h-6 bg-muted rounded w-16"></div>
+                        <div key={tagIndex} className="h-6 bg-muted/30 rounded w-16"></div>
                       ))}
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <div className="h-10 bg-muted rounded w-full"></div>
+                    <div className="h-10 bg-muted/30 rounded w-full"></div>
                   </CardFooter>
                 </Card>
               </motion.div>
@@ -171,13 +179,21 @@ const ProjectsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotateY: 5,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
               >
-                <Card className="h-full border-border bg-card hover:shadow-md transition-all duration-300 hover:border-secondary/50 overflow-hidden group">
+                <Card className="h-full border-border/50 bg-card/20 backdrop-blur-sm hover:shadow-lg hover:shadow-secondary/20 transition-all duration-300 hover:border-secondary/50 overflow-hidden group">
                   <CardHeader className="pb-4">
                     <motion.div 
                       className="mb-2"
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
+                      whileHover={{ 
+                        scale: 1.2, 
+                        rotate: 360,
+                        transition: { type: "spring", stiffness: 300 }
+                      }}
                     >
                       {project.icon}
                     </motion.div>
@@ -190,10 +206,10 @@ const ProjectsSection = () => {
                       {project.tags.map((tag, tagIndex) => (
                         <motion.div
                           key={tagIndex}
-                          whileHover={{ scale: 1.05 }}
+                          whileHover={{ scale: 1.1 }}
                           transition={{ type: "spring", stiffness: 400 }}
                         >
-                          <Badge variant="secondary" className="bg-secondary/10 text-secondary hover:bg-secondary/20">
+                          <Badge variant="secondary" className="bg-secondary/20 text-secondary hover:bg-secondary/30 backdrop-blur-sm">
                             {tag}
                           </Badge>
                         </motion.div>
@@ -210,22 +226,22 @@ const ProjectsSection = () => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Button variant="default" size="sm" className="w-full gap-2">
+                        <Button variant="default" size="sm" className="w-full gap-2 bg-secondary/90 hover:bg-secondary backdrop-blur-sm">
                           Live Demo <ExternalLink className="h-4 w-4" />
                         </Button>
                       </motion.a>
                     )}
                     {project.githubLink && (
                       <motion.a 
-                        href={project.title === "BrainScanNet: Enhanced Brain Tumor Classification" ? "https://www.kaggle.com/code/yashjhotajain/brain-tumor-detection-comparative-study-of-models" : project.title === "FRAS: Face Recognition Attendance System" ? "https://github.com/yashjhota/Facial_Attendance_System" : project.githubLink} 
+                        href={project.githubLink}
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="flex-1"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Button variant="outline" size="sm" className="w-full gap-2">
-                          {project.title === "BrainScanNet: Enhanced Brain Tumor Classification" ? "Kaggle" : "GitHub"} {project.title === "BrainScanNet: Enhanced Brain Tumor Classification" ? <Kaggle className="h-4 w-4" /> : <Github className="h-4 w-4" />}
+                        <Button variant="outline" size="sm" className="w-full gap-2 border-secondary/50 hover:border-secondary backdrop-blur-sm">
+                          GitHub <Github className="h-4 w-4" />
                         </Button>
                       </motion.a>
                     )}
@@ -255,7 +271,7 @@ const ProjectsSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button variant="outline" size="lg" className="gap-2">
+              <Button variant="outline" size="lg" className="gap-2 border-secondary/50 hover:border-secondary backdrop-blur-sm">
                 View All Projects <ArrowRight className="h-4 w-4" />
               </Button>
             </motion.div>
