@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.com/yashjhota/yash-jain-space-portfolio.git",
+  "homepage": "http://yashjhota.me/yash-jain-space-portfolio/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
