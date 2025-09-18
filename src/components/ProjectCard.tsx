@@ -107,7 +107,7 @@ const ProjectCard = ({
         <CardFooter className="flex gap-2 pt-4">
           {live && (
             <motion.a 
-              href={live} 
+              href={title === "BrainScanNet: Enhanced Brain Tumor Classification" ? "https://www.kaggle.com/code/yashjhotajain/brain-tumor-detection-comparative-study-of-models" : live} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="flex-1"
@@ -115,23 +115,12 @@ const ProjectCard = ({
               whileTap={{ scale: 0.98 }}
             >
               <Button variant="default" size="sm" className="w-full gap-2 text-xs">
-                Live Demo <ExternalLink className="h-3 w-3" />
+                {title === "BrainScanNet: Enhanced Brain Tumor Classification" ? "Kaggle" : "Live Demo"} <ExternalLink className="h-3 w-3" />
               </Button>
             </motion.a>
           )}
           {github && (
-            <motion.a 
-              href={github} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex-1"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button variant="outline" size="sm" className="w-full gap-2 text-xs">
-                GitHub <Github className="h-3 w-3" />
-              </Button>
-            </motion.a>
+            
           )}
           {!live && !github && (
             <motion.div 

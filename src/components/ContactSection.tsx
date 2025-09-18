@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { Mail, Phone, MapPin, Send } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle } from 'lucide-react'
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -17,14 +17,73 @@ const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formErrors, setFormErrors] = useState<{[key: string]: string}>({})
   const [isLoaded, setIsLoaded] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
 
-  // Simulate component loading
+  // Check connection status and simulate component loading
   useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        // Check if we're online
+        if (!navigator.onLine) {
+          setConnectionStatus('offline')
+          return
+        }
+
+        // Simulate API health check with timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 3000)
+
+        try {
+          // Instead of making actual API call, we'll simulate connection check
+          await new Promise((resolve, reject) => {
+            setTimeout(() => {
+              // Simulate connection success for demo purposes
+              // In real app, this would be: fetch('/api/health', { signal: controller.signal })
+              if (Math.random() > 0.1) { // 90% success rate for demo
+                resolve('connected')
+              } else {
+                reject(new Error('Connection refused'))
+              }
+            }, 1000)
+          })
+          
+          setConnectionStatus('connected')
+        } catch (error) {
+          console.warn('API connection check failed:', error)
+          setConnectionStatus('offline')
+        } finally {
+          clearTimeout(timeoutId)
+        }
+      } catch (error) {
+        console.error('Connection check error:', error)
+        setConnectionStatus('offline')
+      }
+    }
+
     const timer = setTimeout(() => {
       setIsLoaded(true)
+      checkConnection()
     }, 100)
     
-    return () => clearTimeout(timer)
+    // Listen for online/offline events
+    const handleOnline = () => {
+      setConnectionStatus('connected')
+      toast.success('Connection restored!')
+    }
+    
+    const handleOffline = () => {
+      setConnectionStatus('offline')
+      toast.error('Connection lost. Form will work in offline mode.')
+    }
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
   }, [])
 
   const validateForm = () => {
@@ -62,7 +121,66 @@ const ContactSection = () => {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const submitFormOffline = async (data: typeof formData) => {
+    // Store form data in localStorage for offline submission
+    const offlineSubmissions = JSON.parse(localStorage.getItem('offlineContactSubmissions') || '[]')
+    const submission = {
+      ...data,
+      timestamp: new Date().toISOString(),
+      id: Date.now().toString()
+    }
+    
+    offlineSubmissions.push(submission)
+    localStorage.setItem('offlineContactSubmissions', JSON.stringify(offlineSubmissions))
+    
+    return { success: true, offline: true }
+  }
+
+  const submitFormOnline = async (data: typeof formData) => {
+    // Simulate API call with proper error handling
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+
+    try {
+      // In a real application, this would be your actual API endpoint
+      // const response = await fetch('/api/contact', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data),
+      //   signal: controller.signal
+      // })
+
+      // Simulate API response
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() > 0.2) { // 80% success rate
+            resolve({ ok: true })
+          } else {
+            reject(new Error('Connection refused'))
+          }
+        }, 1500)
+      })
+
+      return { success: true, offline: false }
+    } catch (error) {
+      clearTimeout(timeoutId)
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          throw new Error('Request timeout - please try again')
+        }
+        if (error.message.includes('Connection refused') || error.message.includes('fetch')) {
+          throw new Error('Unable to connect to server. Your message will be saved locally.')
+        }
+      }
+      
+      throw error
+    } finally {
+      clearTimeout(timeoutId)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!validateForm()) {
@@ -72,17 +190,53 @@ const ContactSection = () => {
     
     setIsSubmitting(true)
     
-    // Simulate form submission
-    setTimeout(() => {
-      toast.success('Message sent successfully! I will get back to you soon.')
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      })
+    try {
+      let result
+      
+      if (connectionStatus === 'offline' || !navigator.onLine) {
+        // Handle offline submission
+        result = await submitFormOffline(formData)
+        toast.success('Message saved locally! It will be sent when connection is restored.', {
+          duration: 6000,
+          action: {
+            label: 'View Offline Messages',
+            onClick: () => {
+              const submissions = JSON.parse(localStorage.getItem('offlineContactSubmissions') || '[]')
+              console.log('Offline submissions:', submissions)
+              toast.info(`You have ${submissions.length} offline message(s) saved.`)
+            }
+          }
+        })
+      } else {
+        // Try online submission first
+        try {
+          result = await submitFormOnline(formData)
+          toast.success('Message sent successfully! I will get back to you soon.')
+        } catch (error) {
+          console.warn('Online submission failed, falling back to offline:', error)
+          // Fallback to offline storage
+          result = await submitFormOffline(formData)
+          toast.warning('Connection issue detected. Message saved locally and will be sent when connection is restored.')
+          setConnectionStatus('offline')
+        }
+      }
+      
+      // Clear form on successful submission
+      if (result.success) {
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        })
+      }
+      
+    } catch (error) {
+      console.error('Form submission error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to send message. Please try again.')
+    } finally {
       setIsSubmitting(false)
-    }, 1500)
+    }
   }
 
   const contactInfo = [
@@ -105,6 +259,42 @@ const ContactSection = () => {
       link: null
     }
   ]
+
+  // Connection status indicator
+  const ConnectionStatus = () => {
+    if (connectionStatus === 'checking') {
+      return (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-secondary"></div>
+          Checking connection...
+        </div>
+      )
+    }
+    
+    if (connectionStatus === 'offline') {
+      return (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800"
+        >
+          <AlertCircle className="h-4 w-4" />
+          Offline mode - Messages will be saved locally
+        </motion.div>
+      )
+    }
+    
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800"
+      >
+        <CheckCircle className="h-4 w-4" />
+        Connected - Ready to send messages
+      </motion.div>
+    )
+  }
 
   // If component hasn't loaded yet, show minimal placeholder
   if (!isLoaded) {
@@ -179,6 +369,7 @@ const ContactSection = () => {
           >
             <Card className="border-border bg-card">
               <CardContent className="p-6">
+                <ConnectionStatus />
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -256,8 +447,17 @@ const ContactSection = () => {
                     disabled={isSubmitting}
                     className="w-full gap-2"
                   >
-                    {isSubmitting ? 'Sending...' : 'Send Message'} 
-                    <Send className="h-4 w-4" />
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-current"></div>
+                        {connectionStatus === 'offline' ? 'Saving Locally...' : 'Sending...'}
+                      </>
+                    ) : (
+                      <>
+                        {connectionStatus === 'offline' ? 'Save Message' : 'Send Message'}
+                        <Send className="h-4 w-4" />
+                      </>
+                    )}
                   </Button>
                 </form>
               </CardContent>

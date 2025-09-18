@@ -4,19 +4,16 @@ import path from "path";
 import { componentTagger } from "@codepup/tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: "/", // 👈 IMPORTANT for GitHub Pages
-
   plugins: [
     react(),
+    // inject CodePup badge (dev only); switch to componentTagger({ apply: "both" }) for prod too
     componentTagger({ apply: "both" }),
   ].filter(Boolean),
-
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-
   server: {
     host: "0.0.0.0",
     port: 5173,

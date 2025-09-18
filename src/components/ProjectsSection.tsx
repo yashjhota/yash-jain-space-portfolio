@@ -233,7 +233,7 @@ const ProjectsSection = () => {
                     )}
                     {project.githubLink && (
                       <motion.a 
-                        href={project.githubLink}
+                        href={project.title === 'BrainScanNet: Enhanced Brain Tumor Classification' ? 'https://www.kaggle.com/code/yashjhotajain/brain-tumor-detection-comparative-study-of-models' : project.githubLink}
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="flex-1"
@@ -241,7 +241,7 @@ const ProjectsSection = () => {
                         whileTap={{ scale: 0.98 }}
                       >
                         <Button variant="outline" size="sm" className="w-full gap-2 border-secondary/50 hover:border-secondary backdrop-blur-sm">
-                          GitHub <Github className="h-4 w-4" />
+                          {project.title === 'BrainScanNet: Enhanced Brain Tumor Classification' ? 'Kaggle' : 'GitHub'} {project.title === 'BrainScanNet: Enhanced Brain Tumor Classification' ? <ExternalLink className="h-4 w-4" /> : <Github className="h-4 w-4" />}
                         </Button>
                       </motion.a>
                     )}
